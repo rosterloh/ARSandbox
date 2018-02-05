@@ -1,20 +1,20 @@
 package com.rosterloh.ar.sandbox;
 
-import android.app.Activity;
-import android.app.Application;
-
+import com.rosterloh.ar.sandbox.di.AppComponent;
 import com.rosterloh.ar.sandbox.di.DaggerAppComponent;
 
-import javax.inject.Inject;
-
-import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasActivityInjector;
+import dagger.android.AndroidInjector;
+import dagger.android.support.DaggerApplication;
 import timber.log.Timber;
 
-public class ARApp extends Application implements HasActivityInjector {
+public class ARApp extends DaggerApplication {
 
-    @Inject
-    DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
+    @Override
+    protected AndroidInjector<? extends DaggerApplication> applicationInjector() {
+        AppComponent appComponent = DaggerAppComponent.builder().application(this).build();
+        appComponent.inject(this);
+        return appComponent;
+    }
 
     @Override
     public void onCreate() {
@@ -23,15 +23,5 @@ public class ARApp extends Application implements HasActivityInjector {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
-
-        DaggerAppComponent.builder()
-                .application(this)
-                .build()
-                .inject(this);
-    }
-
-    @Override
-    public DispatchingAndroidInjector<Activity> activityInjector() {
-        return dispatchingAndroidInjector;
     }
 }

@@ -1,19 +1,17 @@
 buildscript {
-    repositories {
-        google()
-        jcenter()
-    }
+    apply from: './versions.gradle'
+    addRepos(repositories)
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-beta4'
+        classpath deps.android_gradle_plugin
     }
 }
 
+plugins {
+    id 'com.github.ben-manes.versions' version '0.17.0'
+}
+
 allprojects {
-    repositories {
-        google()
-        jcenter()
-        flatDir { dirs 'libs' }
-    }
+    addRepos(repositories)
 }
 
 task clean(type: Delete) {
